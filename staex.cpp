@@ -6,16 +6,11 @@ using namespace std;
 
 void _main()
 {
-	State state;
-	state.activePlayer = 1;
-	state.player1Squares = 0;
-	state.player2Squares = 0;
-	state.player1Token = 32768;
-	state.player2Token = 1;
-	for (int i=0; i<16; ++i) {
-    state.heights[i] = 0;
-	}
-	Staex staex(state);
+	BoardState boardState = vector<vector<SquareState>>(
+		4, vector<SquareState>(4, INITIAL_SQUARE_STATE));
+	boardState[0][0].token = 1;
+	boardState[3][3].token = 2;
+	Staex staex(4, boardState);
 	cout << "Staex" << endl;
 	staex.printBoard();
 }
