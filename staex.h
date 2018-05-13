@@ -15,19 +15,12 @@ class Staex {
 		Staex(State _state) : state(_state) {}
 		State state;
 
-		void print(ostream& out) const {
-			out << "Player to move: " << state.activePlayer << endl;
+		void printBoard() const {
 			for (int i=0; i<4; ++i) {
 				for (int j=0; j<4; ++j) {
-			    out << " " << state.heights[4*i+j];
-			  }
-			  out << endl;
+					cout << " " << state.heights[4*i+j];
+				}
+				cout << endl;
 			}
 		}
 };
-
-ostream& operator << (ostream& out, const Staex& staex)
-{
-	staex.print(out);
-	return out;
-}

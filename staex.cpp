@@ -17,7 +17,7 @@ void _main()
 	}
 	Staex staex(state);
 	cout << "Staex" << endl;
-	cout << staex << endl;
+	staex.printBoard();
 }
 
 int main()
