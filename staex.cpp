@@ -13,6 +13,7 @@ void _main()
 	Staex staex(4, boardState);
 	cout << "Staex" << endl;
 	staex.printBoard();
+	cout << "Winner:" << staex.get_winner() << endl;
 }
 
 int main()
