@@ -36,8 +36,7 @@ struct Move {
 
 class Staex {
 	public:
-		typedef int Move;
-		static const Move no_move = -1;
+		static const int no_move = -1;
 		int player_to_move;
 		int game_end_score;
 
@@ -80,6 +79,65 @@ class Staex {
 				return 2;
 			}
 			return 0;
+		}
+
+		bool is_valid_coord(int x, int y) const {
+			if (x < 0 || x >= board_size) {
+				return false;
+			}
+			if (y < 0 || y >= board_size) {
+				return false;
+			}
+			return true;
+		}
+
+		bool is_valid_target(SquareState target) const {
+			return target.owner != player_to_move;
+		}
+
+		vector<Move> get_moves() const {
+			check_invariant();
+
+			vector<Move> moves;
+			if (get_winner() != 0) {
+				return moves;
+			}
+
+			int max_num_moves = (board_size - 1) * 2 + 5;
+			moves.reserve(max_num_moves);
+
+			// Find current player token
+			int token_x, token_y;
+			for (int y=0; y<board_size; ++y) {
+				for (int x=0; x<board_size; ++x) {
+					if (board[y][x].token == player_to_move) {
+						token_x = x;
+						token_y = y;
+					}
+				}
+			}
+
+			int target_x, target_y;
+			// Find Stack targets
+			const int targets[5][2] = { {-1,0}, {1,0}, {0,0}, {0,1}, {0,-1} };
+			for (int t=0; t<5; ++t) {
+				target_x = token_x + targets[t][0];
+				target_y = token_y + targets[t][1];
+				if (is_valid_coord(target_x, target_y)) {
+					SquareState target = board[target_y][target_x];
+					if (is_valid_target(target)) {
+						const Move move = { 'S', target_x, target_y };
+						moves.push_back(move);
+					}
+				}
+			}
+
+			cout << "Valid moves: ";
+			for (int i=0; i<moves.size(); ++i) {
+				cout << "[" << i << "]:" << moves[i].type << moves[i].x << "," << moves[i].y << " ";
+			}
+			cout << endl;
+			return moves;
 		}
 
 	private:
