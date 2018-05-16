@@ -172,6 +172,17 @@ class Staex {
 			return moves.size() > 0;
 		}
 
+		void do_move(Move move) {
+			check_invariant();
+
+			if (move.type == 'S') {
+				board[move.y][move.x].owner = player_to_move;
+				board[move.y][move.x].height++;
+			}
+
+			player_to_move = 3 - player_to_move;
+		}
+
 	private:
 		void check_invariant() const {
 			attest(player_to_move == 1 || player_to_move == 2);

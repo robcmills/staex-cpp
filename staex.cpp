@@ -11,9 +11,10 @@ void _main()
 	boardState[0][0].token = 1;
 	boardState[3][3].token = 2;
 	Staex staex(4, boardState);
+
 	cout << "Staex" << endl;
+
 	staex.printBoard();
-	cout << "Winner: " << staex.get_winner() << endl;
 
 	vector<Move> moves = staex.get_moves();
 	cout << "Valid moves: ";
@@ -21,8 +22,12 @@ void _main()
 		cout << "[" << i << "]:" << moves[i].type << moves[i].x << "," << moves[i].y << " ";
 	}
 	cout << endl;
+	cout << "Your move: ";
+	int move_index = -1;
+	cin >> move_index;
+	staex.do_move(moves[move_index]);
 
-	cout << "Has moves: " << staex.has_moves() << endl;
+	staex.printBoard();
 }
 
 int main()
