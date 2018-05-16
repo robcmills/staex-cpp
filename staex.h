@@ -19,13 +19,15 @@ BoardState const INITIAL_BOARD_STATE = BoardState(
 );
 
 void printSquare(SquareState s) {
-	cout << "H" << s.height;
+	stringstream state;
+	state << "H" << s.height;
 	if (s.owner > 0) {
-		cout << "O" << s.owner;
+		state << "O" << s.owner;
 	}
 	if (s.token > 0) {
-		cout << "T" << s.token;
+		state << "T" << s.token;
 	}
+	cout << setw(8) << state.str();
 }
 
 struct Move {
@@ -52,9 +54,14 @@ class Staex {
 		{}
 
 		void printBoard() const {
-			for (int y=0; y<4; ++y) {
-				for (int x=0; x<4; ++x) {
-					cout << " ";
+			cout << " ";
+			for (int i=0; i<board_size; ++i) {
+				cout << setw(8) << i;
+			}
+			cout << endl;
+			for (int y=0; y<board_size; ++y) {
+				cout << y;
+				for (int x=0; x<board_size; ++x) {
 					printSquare(board[y][x]);
 				}
 				cout << endl;
