@@ -91,8 +91,12 @@ class Staex {
 			return true;
 		}
 
-		bool is_valid_target(SquareState target) const {
+		bool is_valid_stack_target(SquareState target) const {
 			return target.owner != player_to_move;
+		}
+
+		bool is_valid_token_target(SquareState target) const {
+			return target.token != 3 - player_to_move;
 		}
 
 		vector<Move> get_moves() const {
@@ -118,17 +122,33 @@ class Staex {
 			}
 
 			int target_x, target_y;
-			// Find Stack targets
+			// Find stack targets
 			const int targets[5][2] = { {-1,0}, {1,0}, {0,0}, {0,1}, {0,-1} };
 			for (int t=0; t<5; ++t) {
 				target_x = token_x + targets[t][0];
 				target_y = token_y + targets[t][1];
 				if (is_valid_coord(target_x, target_y)) {
 					SquareState target = board[target_y][target_x];
-					if (is_valid_target(target)) {
+					if (is_valid_stack_target(target)) {
 						const Move move = { 'S', target_x, target_y };
 						moves.push_back(move);
 					}
+				}
+			}
+
+			// Find token targets
+			const int directions[4][2] = { {-1,0}, {1,0}, {0,1}, {0,-1} };
+			for (int d=0; d<4; ++d) {
+				target_x = token_x + directions[d][0];
+				target_y = token_y + directions[d][1];
+				while (is_valid_coord(target_x, target_y)) {
+					SquareState target = board[target_y][target_x];
+					if (is_valid_token_target(target)) {
+						const Move move = { 'M', target_x, target_y };
+						moves.push_back(move);
+					}
+					target_x += directions[d][0];
+					target_y += directions[d][1];
 				}
 			}
 
