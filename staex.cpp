@@ -14,7 +14,15 @@ void _main()
 	cout << "Staex" << endl;
 	staex.printBoard();
 	cout << "Winner: " << staex.get_winner() << endl;
-	staex.get_moves();
+
+	vector<Move> moves = staex.get_moves();
+	cout << "Valid moves: ";
+	for (int i=0; i<moves.size(); ++i) {
+		cout << "[" << i << "]:" << moves[i].type << moves[i].x << "," << moves[i].y << " ";
+	}
+	cout << endl;
+
+	cout << "Has moves: " << staex.has_moves() << endl;
 }
 
 int main()

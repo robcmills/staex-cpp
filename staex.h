@@ -142,7 +142,6 @@ class Staex {
 					}
 				}
 			}
-
 			// Find token targets
 			const int directions[4][2] = { {-1,0}, {1,0}, {0,1}, {0,-1} };
 			for (int d=0; d<4; ++d) {
@@ -159,12 +158,18 @@ class Staex {
 				}
 			}
 
-			cout << "Valid moves: ";
-			for (int i=0; i<moves.size(); ++i) {
-				cout << "[" << i << "]:" << moves[i].type << moves[i].x << "," << moves[i].y << " ";
-			}
-			cout << endl;
 			return moves;
+		}
+
+		bool has_moves() const {
+			check_invariant();
+
+			if (get_winner() != 0) {
+				return false;
+			}
+
+			vector<Move> moves = get_moves();
+			return moves.size() > 0;
 		}
 
 	private:
