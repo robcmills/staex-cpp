@@ -180,6 +180,17 @@ class Staex {
 				board[move.y][move.x].height++;
 			}
 
+			if (move.type == 'M') {
+				for (int y=0; y<board_size; ++y) {
+					for (int x=0; x<board_size; ++x) {
+						if (board[y][x].token == player_to_move) {
+							board[y][x].token = 0;
+						}
+					}
+				}
+				board[move.y][move.x].token = player_to_move;
+			}
+
 			player_to_move = 3 - player_to_move;
 		}
 
