@@ -30,14 +30,13 @@ void printSquare(SquareState s) {
 	cout << setw(8) << state.str();
 }
 
-struct Move {
-	char type;
-	int x;
-	int y;
-};
-
 class Staex {
 	public:
+		struct Move {
+			char type;
+			int x;
+			int y;
+		};
 		static const int no_move = -1;
 		int player_to_move;
 		int game_end_score;
@@ -192,6 +191,18 @@ class Staex {
 			}
 
 			player_to_move = 3 - player_to_move;
+		}
+
+		template<typename RandomEngine>
+		void do_random_move(RandomEngine* engine)
+		{
+			check_invariant();
+			vector<Move> valid_moves = get_moves();
+			std::uniform_int_distribution<int> moves(0, valid_moves.size());
+			cout << "uniform_int_distribution: " << moves << endl;
+			int move_index = moves(*engine);
+			cout << "move_index" << move_index << endl;
+			do_move(valid_moves[move_index]);
 		}
 
 	private:

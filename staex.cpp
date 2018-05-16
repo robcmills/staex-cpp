@@ -16,16 +16,22 @@ void _main()
 
 	staex.printBoard();
 
-	vector<Move> moves = staex.get_moves();
+	vector<Staex::Move> moves = staex.get_moves();
 	cout << "Valid moves: ";
 	for (int i=0; i<moves.size(); ++i) {
 		cout << "[" << i << "]:" << moves[i].type << moves[i].x << "," << moves[i].y << " ";
 	}
 	cout << endl;
+
 	cout << "Your move: ";
 	int move_index = -1;
 	cin >> move_index;
 	staex.do_move(moves[move_index]);
+
+	staex.printBoard();
+
+	std::mt19937_64 random_engine;
+	staex.do_random_move(&random_engine);
 
 	staex.printBoard();
 }
