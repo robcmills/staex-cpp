@@ -37,7 +37,7 @@ class Staex {
 			int x;
 			int y;
 		};
-		static const int no_move = -1;
+		static constexpr Move no_move = { '0',0,0 };
 		int player_to_move;
 		int game_end_score;
 
@@ -205,6 +205,19 @@ class Staex {
 			do_move(valid_moves[move_index]);
 		}
 
+		double get_result(int current_player_to_move) const {
+			check_invariant();
+
+			int winner = get_winner();
+			if (winner == 0) {
+				return 0.5;
+			}
+			if (winner == current_player_to_move) {
+				return 0.0;
+			}
+			return 1.0;
+		}
+
 	private:
 		void check_invariant() const {
 			attest(player_to_move == 1 || player_to_move == 2);
@@ -213,3 +226,15 @@ class Staex {
 		int board_size;
 		vector<vector<SquareState>> board;
 };
+
+std::ostream& operator << (std::ostream& o, const Staex::Move& m) {
+	o << m.type << m.x << "," << m.y << std::endl;
+	return o;
+}
+
+bool operator == (const Staex::Move& lhs, const Staex::Move& rhs) {
+  return lhs.type == rhs.type && lhs.x == rhs.x && lhs.y == rhs.y;
+}
+bool operator != (const Staex::Move& lhs, const Staex::Move& rhs) {
+  return !(lhs == rhs);
+}

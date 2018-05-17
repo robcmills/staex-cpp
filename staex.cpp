@@ -4,8 +4,11 @@
 
 using namespace std;
 
-void _main()
-{
+void print_move(Staex::Move m) {
+	cout << "print_move: " << m.type << m.x << "," << m.y << endl;
+}
+
+void _main() {
 	BoardState boardState = vector<vector<SquareState>>(
 		4, vector<SquareState>(4, INITIAL_SQUARE_STATE));
 	boardState[0][0].token = 1;
@@ -30,10 +33,15 @@ void _main()
 
 	staex.printBoard();
 
-	std::mt19937_64 random_engine;
-	staex.do_random_move(&random_engine);
+	MCTS::ComputeOptions compute_options;
+	compute_options.max_iterations =  10000;
+	compute_options.verbose = true;
+	Staex::Move computer_move = MCTS::compute_move(staex, compute_options);
+	print_move(computer_move);
 
-	staex.printBoard();
+	// std::mt19937_64 random_engine;
+	// staex.do_random_move(&random_engine);
+	// staex.printBoard();
 }
 
 int main()
