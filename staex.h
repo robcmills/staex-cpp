@@ -37,7 +37,7 @@ class Staex {
 			int x;
 			int y;
 		};
-		static constexpr Move no_move = { '0',0,0 };
+		static const Move no_move;
 		int player_to_move;
 		int game_end_score;
 
@@ -235,6 +235,11 @@ std::ostream& operator << (std::ostream& o, const Staex::Move& m) {
 bool operator == (const Staex::Move& lhs, const Staex::Move& rhs) {
   return lhs.type == rhs.type && lhs.x == rhs.x && lhs.y == rhs.y;
 }
+
 bool operator != (const Staex::Move& lhs, const Staex::Move& rhs) {
   return !(lhs == rhs);
+}
+
+bool operator < (const Staex::Move& lhs, const Staex::Move& rhs) {
+  return lhs.type < rhs.type && lhs.x < rhs.x && lhs.y < rhs.y;
 }

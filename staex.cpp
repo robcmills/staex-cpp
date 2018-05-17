@@ -4,6 +4,8 @@
 
 using namespace std;
 
+const Staex::Move Staex::no_move = { '0',0,0 };
+
 void print_move(Staex::Move m) {
 	cout << "print_move: " << m.type << m.x << "," << m.y << endl;
 }
