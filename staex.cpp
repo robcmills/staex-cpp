@@ -7,7 +7,7 @@ using namespace std;
 const Staex::Move Staex::no_move = { '0',0,0 };
 
 void print_move(Staex::Move m) {
-	cout << "print_move: " << m.type << m.x << "," << m.y << endl;
+	cout << "print_move: " << m.type << m.x << "," << m.y;
 }
 
 void _main() {
@@ -17,29 +17,45 @@ void _main() {
 	boardState[3][3].token = 2;
 	Staex staex(4, boardState);
 
+	MCTS::ComputeOptions compute_options;
+	compute_options.max_iterations = 1000;
+	compute_options.verbose = false;
+
 	cout << "Staex" << endl;
 
-	staex.printBoard();
+	int winner = staex.get_winner();
+	while (winner == 0) {
+		staex.printBoard();
+		vector<Staex::Move> moves = staex.get_moves();
+		cout << "Valid moves: ";
+		for (int i=0; i<moves.size(); ++i) {
+			cout << "[" << i << "]:" << moves[i] << " ";
+		}
+		cout << endl << "Your move: ";
+		int move_index = -1;
+		cin >> move_index;
+		Staex::Move player_move = moves[move_index];
+		cout << "Player move: " << player_move << endl;
+		staex.do_move(player_move);
+		winner = staex.get_winner();
+		if (winner > 0) {
+			break;
+		}
 
-	vector<Staex::Move> moves = staex.get_moves();
-	cout << "Valid moves: ";
-	for (int i=0; i<moves.size(); ++i) {
-		cout << "[" << i << "]:" << moves[i].type << moves[i].x << "," << moves[i].y << " ";
+		Staex::Move computer_move = MCTS::compute_move(staex, compute_options);
+		cout << "Computer move: " << computer_move << endl;
+		staex.do_move(computer_move);
+		winner = staex.get_winner();
 	}
-	cout << endl;
 
-	cout << "Your move: ";
-	int move_index = -1;
-	cin >> move_index;
-	staex.do_move(moves[move_index]);
-
+	cout << endl << "Final state:" << endl;
 	staex.printBoard();
 
-	MCTS::ComputeOptions compute_options;
-	compute_options.max_iterations =  10000;
-	compute_options.verbose = true;
-	Staex::Move computer_move = MCTS::compute_move(staex, compute_options);
-	print_move(computer_move);
+	if (winner == 1) {
+		cout << "Player 1 wins!" << endl;
+	} else {
+		cout << "Player 2 wins!" << endl;
+	}
 
 	// std::mt19937_64 random_engine;
 	// staex.do_random_move(&random_engine);

@@ -177,9 +177,7 @@ class Staex {
 			if (move.type == 'S') {
 				board[move.y][move.x].owner = player_to_move;
 				board[move.y][move.x].height++;
-			}
-
-			if (move.type == 'M') {
+			} else if (move.type == 'M') {
 				for (int y=0; y<board_size; ++y) {
 					for (int x=0; x<board_size; ++x) {
 						if (board[y][x].token == player_to_move) {
@@ -196,12 +194,11 @@ class Staex {
 		template<typename RandomEngine>
 		void do_random_move(RandomEngine* engine)
 		{
-			check_invariant();
 			vector<Move> valid_moves = get_moves();
 			std::uniform_int_distribution<int> moves(0, valid_moves.size());
-			cout << "uniform_int_distribution: " << moves << endl;
+			// cout << "uniform_int_distribution: " << moves << endl;
 			int move_index = moves(*engine);
-			cout << "move_index" << move_index << endl;
+			// cout << "move_index: " << move_index << endl;
 			do_move(valid_moves[move_index]);
 		}
 
@@ -228,7 +225,7 @@ class Staex {
 };
 
 std::ostream& operator << (std::ostream& o, const Staex::Move& m) {
-	o << m.type << m.x << "," << m.y << std::endl;
+	o << m.type << m.x << "," << m.y;
 	return o;
 }
 
