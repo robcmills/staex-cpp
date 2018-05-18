@@ -195,10 +195,8 @@ class Staex {
 		void do_random_move(RandomEngine* engine)
 		{
 			vector<Move> valid_moves = get_moves();
-			std::uniform_int_distribution<int> moves(0, valid_moves.size());
-			// cout << "uniform_int_distribution: " << moves << endl;
+			std::uniform_int_distribution<int> moves(0, valid_moves.size() - 1);
 			int move_index = moves(*engine);
-			// cout << "move_index: " << move_index << endl;
 			do_move(valid_moves[move_index]);
 		}
 
