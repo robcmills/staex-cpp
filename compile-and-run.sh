@@ -1,1 +1,1 @@
-g++ -std=c++11 staex.cpp -o staex && ./staex
+g++ -std=c++11 staex.cpp -o staex_exe && ./staex_exe
