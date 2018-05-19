@@ -6,10 +6,6 @@ using namespace std;
 
 const Staex::Move Staex::no_move = { '0',0,0 };
 
-void print_move(Staex::Move m) {
-	cout << "print_move: " << m.type << m.x << "," << m.y;
-}
-
 void _main() {
 	BoardState boardState = vector<vector<SquareState>>(
 		4, vector<SquareState>(4, INITIAL_SQUARE_STATE));
@@ -20,7 +16,7 @@ void _main() {
 	MCTS::ComputeOptions compute_options;
 	compute_options.max_iterations = 10000;
 	compute_options.verbose = false;
-	compute_options.number_of_threads = 4;
+	compute_options.number_of_threads = 8;
 
 	cout << "Staex" << endl;
 
@@ -57,10 +53,6 @@ void _main() {
 	} else {
 		cout << "Player 2 wins!" << endl;
 	}
-
-	// std::mt19937_64 random_engine;
-	// staex.do_random_move(&random_engine);
-	// staex.printBoard();
 }
 
 int main()
