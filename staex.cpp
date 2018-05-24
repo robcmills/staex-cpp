@@ -14,9 +14,9 @@ void _main() {
 	Staex staex(4, boardState);
 
 	MCTS::ComputeOptions compute_options;
-	compute_options.max_iterations = 10000;
-	compute_options.verbose = false;
-	compute_options.number_of_threads = 8;
+	compute_options.max_iterations = 10;
+	compute_options.verbose = true;
+	compute_options.number_of_threads = 1;
 
 	cout << "Staex" << endl;
 

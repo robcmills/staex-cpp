@@ -12,7 +12,7 @@ SquareState const INITIAL_SQUARE_STATE = {0,0,0};
 
 typedef vector<vector<SquareState>> BoardState;
 
-static const int DEFAULT_GAME_END_SCORE = 16;
+static const int DEFAULT_GAME_END_SCORE = 1;
 static const int DEFAULT_BOARD_SIZE = 4;
 BoardState const INITIAL_BOARD_STATE = BoardState(
 	DEFAULT_BOARD_SIZE, vector<SquareState>(DEFAULT_BOARD_SIZE, INITIAL_SQUARE_STATE)

@@ -1,0 +1,1 @@
+g++ -std=c++11 random.cpp -o random_exe && ./random_exe
