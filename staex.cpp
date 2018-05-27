@@ -1,8 +1,23 @@
 #include <iostream>
+#include <chrono>
 #include "mcts.h"
 #include "staex.h"
 
 using namespace std;
+
+class Timer {
+public:
+    Timer() : beg_(clock_::now()) {}
+    void reset() { beg_ = clock_::now(); }
+    double elapsed() const {
+        return std::chrono::duration_cast<second_>
+            (clock_::now() - beg_).count(); }
+
+private:
+    typedef std::chrono::high_resolution_clock clock_;
+    typedef std::chrono::duration<double, std::ratio<1> > second_;
+    std::chrono::time_point<clock_> beg_;
+};
 
 const Staex::Move Staex::no_move = { '0',0,0 };
 
@@ -14,14 +29,17 @@ void _main() {
 	Staex staex(4, boardState);
 
 	MCTS::ComputeOptions compute_options;
-	compute_options.max_iterations = 10;
-	compute_options.verbose = true;
-	compute_options.number_of_threads = 1;
+	compute_options.max_iterations = 10000;
+	compute_options.verbose = false;
+	compute_options.number_of_threads = 4;
 
 	cout << "Staex" << endl;
 
 	int winner = staex.get_winner();
 	while (winner == 0) {
+		int player_1_score = staex.get_player_score(1);
+		int player_2_score = staex.get_player_score(2);
+		cout << "Scores: P1:" << player_1_score << " P2:" << player_2_score << endl;
 		staex.printBoard();
 		vector<Staex::Move> moves = staex.get_moves();
 		cout << "Valid moves: ";
@@ -39,8 +57,12 @@ void _main() {
 			break;
 		}
 
+		Timer tmr;
 		Staex::Move computer_move = MCTS::compute_move(staex, compute_options);
+		double t = tmr.elapsed();
 		cout << "Computer move: " << computer_move << endl;
+		cout << "Elapsed: " << t << endl;
+
 		staex.do_move(computer_move);
 		winner = staex.get_winner();
 	}

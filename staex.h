@@ -12,7 +12,7 @@ SquareState const INITIAL_SQUARE_STATE = {0,0,0};
 
 typedef vector<vector<SquareState>> BoardState;
 
-static const int DEFAULT_GAME_END_SCORE = 1;
+static const int DEFAULT_GAME_END_SCORE = 10;
 static const int DEFAULT_BOARD_SIZE = 4;
 BoardState const INITIAL_BOARD_STATE = BoardState(
 	DEFAULT_BOARD_SIZE, vector<SquareState>(DEFAULT_BOARD_SIZE, INITIAL_SQUARE_STATE)
@@ -85,6 +85,21 @@ class Staex {
 				return 2;
 			}
 			return 0;
+		}
+
+		int get_player_score(int player) const {
+			int player_1_score = 0;
+			int player_2_score = 0;
+			for (int y=0; y<board_size; ++y) {
+				for (int x=0; x<board_size; ++x) {
+					if (board[y][x].owner == 1) {
+						player_1_score += board[y][x].height;
+					} else if (board[y][x].owner == 2) {
+						player_2_score += board[y][x].height;
+					}
+				}
+			}
+			return player == 1 ? player_1_score : player_1_score;
 		}
 
 		bool is_valid_coord(int x, int y) const {
@@ -236,5 +251,5 @@ bool operator != (const Staex::Move& lhs, const Staex::Move& rhs) {
 }
 
 bool operator < (const Staex::Move& lhs, const Staex::Move& rhs) {
-  return lhs.type < rhs.type && lhs.x < rhs.x && lhs.y < rhs.y;
+	return lhs.type < rhs.type || lhs.x < rhs.x || lhs.y < rhs.y;
 }
