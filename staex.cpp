@@ -29,18 +29,15 @@ void _main() {
 	Staex staex(4, boardState);
 
 	MCTS::ComputeOptions compute_options;
-	compute_options.max_iterations = 10000;
+	compute_options.max_iterations = 20000;
 	compute_options.verbose = false;
-	compute_options.number_of_threads = 4;
+	compute_options.number_of_threads = 8;
 
 	cout << "Staex" << endl;
 
 	int winner = staex.get_winner();
 	while (winner == 0) {
-		int player_1_score = staex.get_player_score(1);
-		int player_2_score = staex.get_player_score(2);
-		cout << "Scores: P1:" << player_1_score << " P2:" << player_2_score << endl;
-		staex.printBoard();
+		staex.print_board();
 		vector<Staex::Move> moves = staex.get_moves();
 		cout << "Valid moves: ";
 		for (int i=0; i<moves.size(); ++i) {
@@ -68,7 +65,7 @@ void _main() {
 	}
 
 	cout << endl << "Final state:" << endl;
-	staex.printBoard();
+	staex.print_board();
 
 	if (winner == 1) {
 		cout << "Player 1 wins!" << endl;

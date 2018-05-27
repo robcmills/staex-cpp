@@ -18,7 +18,7 @@ BoardState const INITIAL_BOARD_STATE = BoardState(
 	DEFAULT_BOARD_SIZE, vector<SquareState>(DEFAULT_BOARD_SIZE, INITIAL_SQUARE_STATE)
 );
 
-void printSquare(SquareState s) {
+void print_square(SquareState s) {
 	stringstream state;
 	state << "H" << s.height;
 	if (s.owner > 0) {
@@ -52,7 +52,10 @@ class Staex {
 		  game_end_score(game_end_score_)
 		{}
 
-		void printBoard() const {
+		void print_board() const {
+			int player_1_score = get_player_score(1);
+			int player_2_score = get_player_score(2);
+			cout << "Scores: P1:" << player_1_score << " P2:" << player_2_score << endl;
 			cout << " ";
 			for (int i=0; i<board_size; ++i) {
 				cout << setw(8) << i;
@@ -61,7 +64,7 @@ class Staex {
 			for (int y=0; y<board_size; ++y) {
 				cout << y;
 				for (int x=0; x<board_size; ++x) {
-					printSquare(board[y][x]);
+					print_square(board[y][x]);
 				}
 				cout << endl;
 			}
@@ -99,7 +102,7 @@ class Staex {
 					}
 				}
 			}
-			return player == 1 ? player_1_score : player_1_score;
+			return player == 1 ? player_1_score : player_2_score;
 		}
 
 		bool is_valid_coord(int x, int y) const {
