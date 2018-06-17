@@ -1,1 +1,0 @@
-g++ -std=c++11 selectors.test.cpp -o selectors_test_exe && ./selectors_test_exe
