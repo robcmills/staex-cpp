@@ -15,12 +15,10 @@ class Staex {
 		) :
 			state(state_)
 		{
-			cout << "Staex constructor" << endl;
 			build_move_maps();
 		}
 
-		void build_move_maps() {
-			cout << "build_move_maps" << endl;
+		void build_adjacents_map() {
 			// Adjacents squares for stack targets
 			const int adjacents[5][2] = { {-1,0}, {1,0}, {0,0}, {0,1}, {0,-1} };
 			int length = state.square_heights.size();
@@ -42,5 +40,9 @@ class Staex {
 				int value = adjacent_squares & length_mask;
 				adjacent_squares_map[key] = value;
 			}
+		}
+
+		void build_move_maps() {
+			build_adjacents_map();
 		}
 };
