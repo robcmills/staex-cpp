@@ -19,13 +19,19 @@ class Staex {
 		std::map<int,int> moves_map;
 		int valid_stacks;
 		int valid_moves;
+		std::vector<int> valid_actions;
 
 		Staex(
 			StaexState state_ = DEFAULT_STAEX_STATE
 		) :
 			state(state_)
 		{
-			build_move_maps();
+			board_length = state.square_heights.size();
+			board_size = int(sqrt(board_length));
+			build_maps();
+			// reserve enough for max num actions
+			valid_actions.reserve((board_size - 1) * 2 + 5);
+			build_valid_actions();
 		}
 
 		void build_pow_map() {
@@ -88,6 +94,14 @@ class Staex {
 			}
 		}
 
+		void build_maps() {
+			build_pow_map();
+			build_adjacents_map();
+			build_ranks_map();
+			build_files_map();
+			build_moves_map();
+		}
+
 		void build_valid_stacks() {
 			int active_player_token = state.active_player == 1
 				? state.player1_token
@@ -118,15 +132,17 @@ class Staex {
 			valid_moves &= ~non_active_player_token;
 		}
 
-		void build_move_maps() {
-			board_length = state.square_heights.size();
-			board_size = int(sqrt(board_length));
-			build_pow_map();
-			build_adjacents_map();
-			build_ranks_map();
-			build_files_map();
-			build_moves_map();
+		void build_valid_actions() {
 			build_valid_stacks();
 			build_valid_moves();
+			valid_actions.clear();
+			for (int i = 0; i < board_length; ++i) {
+				if (pow_map[i] & valid_stacks) {
+					valid_actions.push_back(i + 1);
+				}
+				if (pow_map[i] & valid_moves) {
+					valid_actions.push_back((i + 1) * -1);
+				}
+			}
 		}
 };
