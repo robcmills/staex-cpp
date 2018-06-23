@@ -172,7 +172,10 @@ class Staex {
 				: state.player2_token = token;
 		}
 
-		// void perform_action(int action) {
-		// 	action > 0 ? perform_stack(action - 1) : perform_move(action - 1);
-		// }
+		void perform_action(int action) {
+			action > 0
+				? perform_stack(action - 1)
+				: perform_move(action * -1 - 1);
+			state.active_player = 3 - state.active_player;
+		}
 };
