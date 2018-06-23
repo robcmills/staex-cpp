@@ -26,44 +26,55 @@ const int DEFAULT_MOVES[9][2] = {
 	{256,228},
 };
 
-bool test_adjacents(map<int,int> adjacents) {
+std::string b(int integer) {
+	return std::bitset<9>(integer).to_string();
+}
+
+void assert_is_equal(int a, int b, std::string id) {
+	if (a != b) {
+		cout << "FAIL: Expected " << a << " to equal " << b << " in " << id << endl;
+	}
+}
+
+void test_adjacents(map<int,int> adjacents) {
 	// adjacent squares map
 	for (int i = 0; i < 9; ++i) {
 		int key = DEFAULT_ADJACENTS[i][0];
 		int value = DEFAULT_ADJACENTS[i][1];
-		if (adjacents[key] != value) {
-			cout << "FAIL: Expected staex.adjacent_squares_map[" << key << "] ";
-			cout << "to equal " << value << " but instead got ";
-			cout << adjacents[key] << endl;
-			return false;
-		}
+		assert_is_equal(adjacents[key], value, "test_adjacents");
 	}
-	return true;
 }
 
-bool test_moves(map<int,int> moves) {
+void test_moves(map<int,int> moves) {
 	// rook movements
 	for (int i = 0; i < 9; ++i) {
 		int key = DEFAULT_MOVES[i][0];
 		int value = DEFAULT_MOVES[i][1];
-		if (moves[key] != value) {
-			cout << "FAIL: Expected staex.moves_map[" << key << "] ";
-			cout << "to equal " << value << " but instead got ";
-			cout << moves[key] << endl;
-			return false;
-		}
+		assert_is_equal(moves[key], value, "test_moves");
 	}
-	return true;
+}
+
+void test_default_valid_stacks(int valid_stacks) {
+	assert_is_equal(valid_stacks, 416, "test_default_valid_stacks");
+}
+
+void test_build_valid_stacks(Staex staex) {
+	// test exclude squares already occupied by current player
+	staex.state.player1_squares = int(pow(2, 8));
+	staex.build_valid_stacks();
+	assert_is_equal(staex.valid_stacks, 160, "test_build_valid_stacks.1");
+	// test exclude squares occupied by opponent token
+	staex.state.player2_token = int(pow(2, 7));
+	staex.build_valid_stacks();
+	assert_is_equal(staex.valid_stacks, 32, "test_build_valid_stacks.2");
 }
 
 int main() {
-	bool didPass = true;
 	Staex staex;
+	test_adjacents(staex.adjacent_squares_map);
+	test_moves(staex.moves_map);
+	test_default_valid_stacks(staex.valid_stacks);
+	test_build_valid_stacks(staex);
 
-	didPass = test_adjacents(staex.adjacent_squares_map);
-	didPass = test_moves(staex.moves_map);
-
-	if (didPass) {
-		cout << "All tests passed." << endl;
-	}
+	cout << "Tests complete." << endl;
 }

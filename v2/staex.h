@@ -1,6 +1,7 @@
-#include <iostream>
 #include <bitset>
+#include <iostream>
 #include <map>
+#include <vector>
 
 #include "staex-state.h"
 
@@ -15,6 +16,7 @@ class Staex {
 		std::map<int,int> ranks_map;
 		std::map<int,int> files_map;
 		std::map<int,int> moves_map;
+		int valid_stacks;
 
 		Staex(
 			StaexState state_ = DEFAULT_STAEX_STATE
@@ -27,8 +29,6 @@ class Staex {
 		void build_adjacents_map() {
 			// Adjacents squares for stack targets
 			const int adjacents[5][2] = { {-1,0}, {1,0}, {0,0}, {0,1}, {0,-1} };
-			board_length = state.square_heights.size();
-			board_size = int(sqrt(board_length));
 			int length_mask = 1;
 			for (int i = 0; i < board_length; ++i) {
 				length_mask = length_mask | int(pow(2,i));
@@ -81,9 +81,30 @@ class Staex {
 		}
 
 		void build_move_maps() {
+			board_length = state.square_heights.size();
+			board_size = int(sqrt(board_length));
 			build_adjacents_map();
 			build_ranks_map();
 			build_files_map();
 			build_moves_map();
+			build_valid_stacks();
+		}
+
+		void build_valid_stacks() {
+			int active_player_token = state.active_player == 1
+				? state.player1_token
+				: state.player2_token;
+			int adjacents = adjacent_squares_map[active_player_token];
+			// Exclude squares already owned by player
+			int active_player_squares = state.active_player == 1
+				? state.player1_squares
+				: state.player2_squares;
+			int owned_intersection = adjacents & active_player_squares;
+			valid_stacks = adjacents ^ owned_intersection;
+			// Exclude squares occupied by opponent
+			int non_active_player_token = state.active_player == 1
+				? state.player2_token
+				: state.player1_token;
+			valid_stacks &= ~non_active_player_token;
 		}
 };
