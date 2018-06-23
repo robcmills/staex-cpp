@@ -123,11 +123,19 @@ void test_perform_stack(Staex staex) {
 
 void test_perform_move(Staex staex) {
 	staex.perform_move(2);
-	assert_is_equal(
-		staex.state.player1_token,
-		staex.pow_map[2],
-		"test_perform_move"
-	);
+	assert_is_equal(staex.state.player1_token, staex.pow_map[2], "test_perform_move");
+}
+
+void test_default_update_winner(int winner) {
+	assert_is_equal(winner, 0, "test_default_update_winner");
+}
+
+
+void test_update_winner(Staex staex) {
+	staex.state.square_heights[0] = 10;
+	staex.state.player2_squares = staex.pow_map[0];
+	staex.update_winner();
+	assert_is_equal(staex.winner, 2, "test_update_winner");
 }
 
 int main() {
@@ -143,6 +151,8 @@ int main() {
 	test_build_valid_actions(staex);
 	test_perform_stack(staex);
 	test_perform_move(staex);
+	test_default_update_winner(staex.winner);
+	test_update_winner(staex);
 
 	cout << "Tests complete." << endl;
 }

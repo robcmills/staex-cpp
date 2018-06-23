@@ -20,6 +20,7 @@ class Staex {
 		int valid_stacks;
 		int valid_moves;
 		std::vector<int> valid_actions;
+		int winner;
 		// Note that state.square_heights and action indexes are descending
 		// to reflect binary power conversions.
 		/*
@@ -39,6 +40,7 @@ class Staex {
 			// reserve enough for max num actions
 			valid_actions.reserve((board_size - 1) * 2 + 5);
 			build_valid_actions();
+			update_winner();
 		}
 
 		void build_pow_map() {
@@ -177,5 +179,24 @@ class Staex {
 				? perform_stack(action - 1)
 				: perform_move(action * -1 - 1);
 			state.active_player = 3 - state.active_player;
+		}
+
+		void update_winner() {
+			int player1_score = 0;
+			int player2_score = 0;
+			for (int i = 0; i < board_length; ++i) {
+				if (state.player1_squares & pow_map[i]) {
+					player1_score += state.square_heights[i];
+				} else if (state.player2_squares & pow_map[i]) {
+					player2_score += state.square_heights[i];
+				}
+			}
+			if (player1_score > state.game_end_score) {
+				winner = 1;
+			} else if (player2_score > state.game_end_score) {
+				winner = 2;
+			} else {
+				winner = 0;
+			}
 		}
 };
