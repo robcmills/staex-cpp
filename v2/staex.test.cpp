@@ -69,12 +69,25 @@ void test_build_valid_stacks(Staex staex) {
 	assert_is_equal(staex.valid_stacks, 32, "test_build_valid_stacks.2");
 }
 
+void test_default_valid_moves(int valid_moves) {
+	assert_is_equal(valid_moves, 228, "test_default_valid_moves");
+}
+
+void test_build_valid_moves(Staex staex) {
+	// test exclude squares occupied by opponent token
+	staex.state.player2_token = int(pow(2, 7));
+	staex.build_valid_moves();
+	assert_is_equal(staex.valid_moves, 100, "test_build_valid_moves");
+}
+
 int main() {
 	Staex staex;
 	test_adjacents(staex.adjacent_squares_map);
 	test_moves(staex.moves_map);
 	test_default_valid_stacks(staex.valid_stacks);
 	test_build_valid_stacks(staex);
+	test_default_valid_moves(staex.valid_moves);
+	test_build_valid_moves(staex);
 
 	cout << "Tests complete." << endl;
 }

@@ -18,6 +18,7 @@ class Staex {
 		std::map<int,int> files_map;
 		std::map<int,int> moves_map;
 		int valid_stacks;
+		int valid_moves;
 
 		Staex(
 			StaexState state_ = DEFAULT_STAEX_STATE
@@ -105,6 +106,18 @@ class Staex {
 			valid_stacks &= ~non_active_player_token;
 		}
 
+		void build_valid_moves() {
+			int active_player_token = state.active_player == 1
+				? state.player1_token
+				: state.player2_token;
+			valid_moves = moves_map[active_player_token];
+			// Exclude squares occupied by opponent
+			int non_active_player_token = state.active_player == 1
+				? state.player2_token
+				: state.player1_token;
+			valid_moves &= ~non_active_player_token;
+		}
+
 		void build_move_maps() {
 			board_length = state.square_heights.size();
 			board_size = int(sqrt(board_length));
@@ -114,5 +127,6 @@ class Staex {
 			build_files_map();
 			build_moves_map();
 			build_valid_stacks();
+			build_valid_moves();
 		}
 };
