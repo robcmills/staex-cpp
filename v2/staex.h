@@ -20,6 +20,13 @@ class Staex {
 		int valid_stacks;
 		int valid_moves;
 		std::vector<int> valid_actions;
+		// Note that state.square_heights and action indexes are descending
+		// to reflect binary power conversions.
+		/*
+			876
+			543
+			210
+		*/
 
 		Staex(
 			StaexState state_ = DEFAULT_STAEX_STATE
@@ -145,4 +152,20 @@ class Staex {
 				}
 			}
 		}
+
+		void perform_stack(int stack_index) {
+			int mask = pow_map[stack_index];
+			if (state.active_player == 1) {
+			  state.player1_squares |= mask;
+			  state.player2_squares &= ~mask;
+			} else {
+			  state.player2_squares |= mask;
+			  state.player1_squares &= ~mask;
+			}
+			state.square_heights[stack_index]++;
+		}
+
+		// void perform_action(int action) {
+		// 	action > 0 ? perform_stack(action - 1) : perform_move(action - 1);
+		// }
 };
