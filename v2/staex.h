@@ -165,6 +165,13 @@ class Staex {
 			state.square_heights[stack_index]++;
 		}
 
+		void perform_move(int move_index) {
+			int token = pow_map[move_index];
+			state.active_player == 1
+				? state.player1_token = token
+				: state.player2_token = token;
+		}
+
 		// void perform_action(int action) {
 		// 	action > 0 ? perform_stack(action - 1) : perform_move(action - 1);
 		// }

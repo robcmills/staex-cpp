@@ -121,6 +121,15 @@ void test_perform_stack(Staex staex) {
 	);
 }
 
+void test_perform_move(Staex staex) {
+	staex.perform_move(2);
+	assert_is_equal(
+		staex.state.player1_token,
+		staex.pow_map[2],
+		"test_perform_move"
+	);
+}
+
 int main() {
 	Staex staex;
 
@@ -133,6 +142,7 @@ int main() {
 	test_default_valid_actions(staex.valid_actions);
 	test_build_valid_actions(staex);
 	test_perform_stack(staex);
+	test_perform_move(staex);
 
 	cout << "Tests complete." << endl;
 }
