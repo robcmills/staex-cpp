@@ -179,6 +179,7 @@ class Staex {
 				? perform_stack(action - 1)
 				: perform_move(action * -1 - 1);
 			state.active_player = 3 - state.active_player;
+			update_winner();
 		}
 
 		void update_winner() {
