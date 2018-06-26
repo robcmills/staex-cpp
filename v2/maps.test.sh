@@ -1,0 +1,1 @@
+g++ -std=c++11 maps.test.cpp -o maps_test_binary && ./maps_test_binary
