@@ -22,6 +22,11 @@ void test_default_root_node(MCTS::Node* node) {
 void test_add_children(MCTS::Node* node) {
 	node->add_children();
 	assert_equal<int>(node->children.size(), 7, "root node has 7 children");
+	assert_equal<int>(node->staex.state.player1_token, 256, "root node state is unchanged");
+	assert_equal<int>(
+		node->children[0]->staex.state.player1_token,
+		4, "first child state is changed"
+	);
 }
 
 int main() {
@@ -34,7 +39,7 @@ int main() {
 	test_default_root_node(&node);
 	test_add_children(&node);
 
-	cout << node.tree_to_string() << endl;
+	// cout << node.tree_to_string() << endl;
 
 	cout << "Tests complete." << endl;
 }
