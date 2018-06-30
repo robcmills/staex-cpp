@@ -1,6 +1,8 @@
 #include <vector>
 #include <limits>
 #include <cmath>
+#include <sstream>
+#include <string>
 
 #include "staex.h"
 
@@ -8,6 +10,7 @@ using namespace std;
 
 // Exploration parameter
 const int C = 2;
+const float FLOAT_INFINITY = std::numeric_limits<float>::infinity();
 
 namespace MCTS {
 
@@ -25,6 +28,7 @@ class Node {
 		Node(int move, Node* parent, const Staex& staex);
 
 		void update_ucb();
+		std::string to_string() const;
 };
 
 Node::Node(
@@ -43,7 +47,7 @@ Node::Node(
 
 void Node::update_ucb() {
 	if (visits == 0) {
-		ucb = std::numeric_limits<float>::infinity();
+		ucb = FLOAT_INFINITY;
 		return;
 	}
 	if (!parent || parent->visits == 0) {
@@ -53,6 +57,14 @@ void Node::update_ucb() {
 	float exploitation = wins / visits;
 	float exploration = sqrt(C * log(parent->visits) / visits);
 	ucb = exploitation + exploration;
+}
+
+std::string Node::to_string() const {
+	std::stringstream sout;
+	sout << "m:" << move << " "
+		<< "w/v:" << wins << "/" << visits << " "
+		<< "u:" << ucb;
+	return sout.str();
 }
 
 }
