@@ -16,7 +16,7 @@ namespace MCTS {
 
 class Node {
 	public:
-		const Staex staex;
+		Staex staex;
 		const int move;
 		Node* const parent;
 		int depth;
@@ -25,16 +25,18 @@ class Node {
 		std::vector<Node*> children;
 		float ucb;
 
-		Node(int move, Node* parent, const Staex& staex);
+		Node(int move, Node* parent, Staex staex);
 
 		void update_ucb();
+		void add_children();
 		std::string to_string() const;
+		std::string tree_to_string() const;
 };
 
 Node::Node(
 	int move_,
 	Node* parent_,
-	const Staex& staex_
+	Staex staex_
 ) :
 	move(move_),
 	parent(parent_),
@@ -50,7 +52,7 @@ void Node::update_ucb() {
 		ucb = FLOAT_INFINITY;
 		return;
 	}
-	if (!parent || parent->visits == 0) {
+	if (parent == nullptr || parent->visits == 0) {
 		ucb = 0;
 		return;
 	}
@@ -59,12 +61,29 @@ void Node::update_ucb() {
 	ucb = exploitation + exploration;
 }
 
+void Node::add_children() {
+	for (auto action: staex.valid_actions) {
+		auto child = new Node(action, this, staex);
+		child->staex.perform_action(action);
+		children.push_back(child);
+	}
+}
+
 std::string Node::to_string() const {
-	std::stringstream sout;
-	sout << "m:" << move << " "
+	std::stringstream ss;
+	ss << "m:" << move << " "
 		<< "w/v:" << wins << "/" << visits << " "
 		<< "u:" << ucb;
-	return sout.str();
+	return ss.str();
+}
+
+std::string Node::tree_to_string() const {
+	std::stringstream ss;
+	ss << to_string();
+	for (auto child: children) {
+		ss << endl << "  " << child->tree_to_string();
+	}
+	return ss.str();
 }
 
 }

@@ -19,6 +19,11 @@ void test_default_root_node(MCTS::Node* node) {
 	assert_equal<float>(node->ucb, FLOAT_INFINITY, "root node ucb is infinity");
 }
 
+void test_add_children(MCTS::Node* node) {
+	node->add_children();
+	assert_equal<int>(node->children.size(), 7, "root node has 7 children");
+}
+
 int main() {
 	map<int,int> pow_map = build_pow_map(9);
 	map<int,int> adjacents_map = build_adjacents_map(9, 3, &pow_map);
@@ -26,9 +31,10 @@ int main() {
 	Staex staex(DEFAULT_STAEX_STATE, &pow_map, &adjacents_map, &moves_map);
 	MCTS::Node node(0, nullptr, staex);
 
-	cout << node.to_string() << endl;
-
 	test_default_root_node(&node);
+	test_add_children(&node);
+
+	cout << node.tree_to_string() << endl;
 
 	cout << "Tests complete." << endl;
 }
