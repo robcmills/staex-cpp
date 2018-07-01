@@ -39,6 +39,10 @@ void test_mcts_select(MCTS::MCTS* mcts) {
 	assert_equal<int>(mcts->current_node->move, -3, "current_node selected");
 }
 
+void test_mcts_expand(MCTS::MCTS* mcts) {
+	mcts->expand();
+}
+
 int main() {
 	map<int,int> pow_map = build_pow_map(9);
 	map<int,int> adjacents_map = build_adjacents_map(9, 3, &pow_map);
@@ -49,11 +53,12 @@ int main() {
 	test_default_root_node(&node);
 	test_add_children(&node);
 
-	// cout << node.tree_to_string() << endl;
-
 	MCTS::MCTS mcts(10, staex);
 	test_default_mcts(&mcts);
 	test_mcts_select(&mcts);
+	test_mcts_expand(&mcts);
+
+	cout << mcts.root_node.tree_to_string() << endl;
 
 	cout << "Tests complete." << endl;
 }

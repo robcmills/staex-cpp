@@ -1,15 +1,16 @@
-#include <vector>
-#include <limits>
 #include <cmath>
+#include <ctime>
+#include <limits>
+#include <random>
 #include <sstream>
 #include <string>
+#include <vector>
 
 #include "staex.h"
 
 using namespace std;
 
-// Exploration parameter
-const int C = 2;
+const int C = 2; // Exploration parameter
 const float FLOAT_INFINITY = std::numeric_limits<float>::infinity();
 
 namespace MCTS {
@@ -29,8 +30,9 @@ class Node {
 
 		void update_ucb();
 		void add_children();
+		Node* get_random_child(std::mt19937_64* random_engine);
 		std::string to_string() const;
-		std::string tree_to_string() const;
+		std::string tree_to_string(int depth = 1) const;
 };
 
 Node::Node(
@@ -69,19 +71,27 @@ void Node::add_children() {
 	}
 }
 
+Node* Node::get_random_child(std::mt19937_64* engine) {
+	std::uniform_int_distribution<std::size_t> distribution(0, children.size() - 1);
+	return children[distribution(*engine)];
+}
+
 std::string Node::to_string() const {
 	std::stringstream ss;
 	ss << "m:" << move << " "
 		<< "w/v:" << wins << "/" << visits << " "
+		<< "p:" << staex.state.active_player << " "
 		<< "u:" << ucb;
 	return ss.str();
 }
 
-std::string Node::tree_to_string() const {
+std::string Node::tree_to_string(int depth) const {
 	std::stringstream ss;
 	ss << to_string();
 	for (auto child: children) {
-		ss << endl << "  " << child->tree_to_string();
+		ss << endl;
+		for (int i = 0; i < depth; ++i) { ss << "  "; }
+		ss << child->tree_to_string(depth + 1);
 	}
 	return ss.str();
 }
@@ -91,11 +101,13 @@ class MCTS {
 		int rounds;
 		Node root_node;
 		Node* current_node;
+		std::mt19937_64 random_engine;
 
 		MCTS(int rounds, Staex staex);
 
 		bool should_continue() const;
 		void select();
+		void expand();
 };
 
 MCTS::MCTS(
@@ -106,6 +118,8 @@ MCTS::MCTS(
 	root_node(*(new Node(0, nullptr, staex)))
 {
 	root_node.add_children();
+	std::mt19937_64 engine(std::time(0));
+	random_engine = engine;
 }
 
 bool MCTS::should_continue() const {
@@ -123,6 +137,12 @@ void MCTS::select() {
 			}
 		);
 	}
+}
+
+void MCTS::expand() {
+	if(current_node->staex.winner != 0) { return; }
+	current_node->add_children();
+	current_node = current_node->get_random_child(&random_engine);
 }
 
 }
