@@ -86,4 +86,24 @@ std::string Node::tree_to_string() const {
 	return ss.str();
 }
 
+class MCTS {
+	public:
+		int rounds;
+		Node root_node;
+		Node* current_node;
+
+		MCTS(int rounds, Staex staex);
+};
+
+MCTS::MCTS(
+	int rounds_,
+	Staex staex
+) :
+	rounds(rounds_),
+	root_node(*(new Node(0, nullptr, staex)))
+{
+	root_node.add_children();
+	current_node = &root_node;
+}
+
 }

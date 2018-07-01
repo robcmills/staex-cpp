@@ -40,6 +40,7 @@ int main() {
 	test_add_children(&node);
 
 	// cout << node.tree_to_string() << endl;
+	MCTS::MCTS mcts(10, staex);
 
 	cout << "Tests complete." << endl;
 }
