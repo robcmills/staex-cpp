@@ -95,6 +95,7 @@ class MCTS {
 		MCTS(int rounds, Staex staex);
 
 		bool should_continue() const;
+		void select();
 };
 
 MCTS::MCTS(
@@ -105,11 +106,23 @@ MCTS::MCTS(
 	root_node(*(new Node(0, nullptr, staex)))
 {
 	root_node.add_children();
-	current_node = &root_node;
 }
 
 bool MCTS::should_continue() const {
 	return rounds > 0;
+}
+
+void MCTS::select() {
+	current_node = &root_node;
+	while (current_node->children.size() > 0 && should_continue()) {
+		current_node = *std::max_element(
+			current_node->children.begin(),
+			current_node->children.end(),
+			[](Node* a, Node* b) {
+				return a->ucb < b->ucb;
+			}
+		);
+	}
 }
 
 }
