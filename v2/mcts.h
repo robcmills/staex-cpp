@@ -93,6 +93,8 @@ class MCTS {
 		Node* current_node;
 
 		MCTS(int rounds, Staex staex);
+
+		bool should_continue() const;
 };
 
 MCTS::MCTS(
@@ -104,6 +106,10 @@ MCTS::MCTS(
 {
 	root_node.add_children();
 	current_node = &root_node;
+}
+
+bool MCTS::should_continue() const {
+	return rounds > 0;
 }
 
 }

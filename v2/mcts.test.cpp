@@ -29,6 +29,11 @@ void test_add_children(MCTS::Node* node) {
 	);
 }
 
+void test_default_mcts(MCTS::MCTS* mcts) {
+	assert_equal<int>(mcts->rounds, 10, "rounds set");
+	assert_equal<bool>(mcts->should_continue(), true, "should continue");
+}
+
 int main() {
 	map<int,int> pow_map = build_pow_map(9);
 	map<int,int> adjacents_map = build_adjacents_map(9, 3, &pow_map);
@@ -41,6 +46,7 @@ int main() {
 
 	// cout << node.tree_to_string() << endl;
 	MCTS::MCTS mcts(10, staex);
+	test_default_mcts(&mcts);
 
 	cout << "Tests complete." << endl;
 }
