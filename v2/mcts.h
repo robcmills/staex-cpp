@@ -101,6 +101,7 @@ class MCTS {
 		int rounds;
 		Node root_node;
 		Node* current_node;
+		int current_winner;
 		std::mt19937_64 random_engine;
 
 		MCTS(int rounds, Staex staex);
@@ -108,6 +109,7 @@ class MCTS {
 		bool should_continue() const;
 		void select();
 		void expand();
+		void playout();
 };
 
 MCTS::MCTS(
@@ -115,6 +117,7 @@ MCTS::MCTS(
 	Staex staex
 ) :
 	rounds(rounds_),
+	current_winner(0),
 	root_node(*(new Node(0, nullptr, staex)))
 {
 	root_node.add_children();
@@ -143,6 +146,14 @@ void MCTS::expand() {
 	if(current_node->staex.winner != 0) { return; }
 	current_node->add_children();
 	current_node = current_node->get_random_child(&random_engine);
+}
+
+void MCTS::playout() {
+	Staex playout = current_node->staex.clone();
+	while (playout.winner == 0 && should_continue()) {
+		playout.perform_playout_action(&random_engine);
+	}
+	current_winner = playout.winner;
 }
 
 }

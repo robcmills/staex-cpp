@@ -12,6 +12,13 @@ void assert_equal(T a, T b, std::string id) {
 	}
 }
 
+template<typename T>
+void assert_not_equal(T a, T b, std::string id) {
+	if (a == b) {
+		cout << "FAIL: Expected " << a << " to equal " << b << " in " << id << endl;
+	}
+}
+
 void test_default_root_node(MCTS::Node* node) {
 	assert_equal<int>(node->move, 0, "root node move is zero");
 	assert_equal<int>(node->wins, 0, "root node wins is zero");
@@ -43,6 +50,11 @@ void test_mcts_expand(MCTS::MCTS* mcts) {
 	mcts->expand();
 }
 
+void test_mcts_playout(MCTS::MCTS* mcts) {
+	mcts->playout();
+	assert_not_equal<int>(mcts->current_winner, 0, "playout");
+}
+
 int main() {
 	map<int,int> pow_map = build_pow_map(9);
 	map<int,int> adjacents_map = build_adjacents_map(9, 3, &pow_map);
@@ -57,8 +69,9 @@ int main() {
 	test_default_mcts(&mcts);
 	test_mcts_select(&mcts);
 	test_mcts_expand(&mcts);
+	test_mcts_playout(&mcts);
 
-	cout << mcts.root_node.tree_to_string() << endl;
+	// cout << mcts.root_node.tree_to_string() << endl;
 
 	cout << "Tests complete." << endl;
 }

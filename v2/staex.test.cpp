@@ -1,3 +1,4 @@
+#include <ctime>
 #include <iostream>
 using namespace std;
 
@@ -12,6 +13,12 @@ std::string b(int integer) {
 
 void assert_is_equal(int a, int b, std::string id) {
 	if (a != b) {
+		cout << "FAIL: Expected " << a << " to equal " << b << " in " << id << endl;
+	}
+}
+
+void assert_not_equal(int a, int b, std::string id) {
+	if (a == b) {
 		cout << "FAIL: Expected " << a << " to equal " << b << " in " << id << endl;
 	}
 }
@@ -87,6 +94,16 @@ void test_perform_move(Staex staex) {
 	assert_is_equal(staex.state.player1_token, (*staex.pow_map)[2], "test_perform_move");
 }
 
+void test_perform_playout_action(Staex staex) {
+	std::mt19937_64 random_engine(std::time(0));
+	staex.perform_playout_action(&random_engine);
+	assert_not_equal(
+		staex.state.player1_squares,
+		DEFAULT_STAEX_STATE.player1_squares,
+		"playout stack"
+	);
+}
+
 void test_default_update_winner(int winner) {
 	assert_is_equal(winner, 0, "test_default_update_winner");
 }
@@ -113,6 +130,7 @@ int main() {
 	test_build_valid_actions(staex);
 	test_perform_stack(staex);
 	test_perform_move(staex);
+	test_perform_playout_action(staex);
 	test_default_update_winner(staex.winner);
 	test_update_winner(staex);
 

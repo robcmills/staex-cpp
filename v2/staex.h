@@ -1,6 +1,7 @@
 #include <bitset>
 #include <iostream>
 #include <map>
+#include <random>
 #include <vector>
 
 #include "staex-state.h"
@@ -17,6 +18,8 @@ class Staex {
 		std::map<int,int>* moves_map;
 		int valid_stacks;
 		int valid_moves;
+		std::vector<int> valid_stack_actions;
+		std::vector<int> valid_move_actions;
 		std::vector<int> valid_actions;
 		int winner;
 		// Note that state.square_heights and action indexes are descending
@@ -41,6 +44,8 @@ class Staex {
 			board_length = state.square_heights.size();
 			board_size = int(sqrt(board_length));
 			// reserve enough for max num actions
+			valid_stack_actions.reserve(5);
+			valid_move_actions.reserve((board_size - 1) * 2);
 			valid_actions.reserve((board_size - 1) * 2 + 5);
 			build_valid_actions();
 			update_winner();
@@ -79,12 +84,16 @@ class Staex {
 		void build_valid_actions() {
 			build_valid_stacks();
 			build_valid_moves();
+			valid_stack_actions.clear();
+			valid_move_actions.clear();
 			valid_actions.clear();
 			for (int i = 0; i < board_length; ++i) {
 				if ((*pow_map)[i] & valid_stacks) {
+					valid_stack_actions.push_back(i + 1);
 					valid_actions.push_back(i + 1);
 				}
 				if ((*pow_map)[i] & valid_moves) {
+					valid_move_actions.push_back((i + 1) * -1);
 					valid_actions.push_back((i + 1) * -1);
 				}
 			}
@@ -118,6 +127,19 @@ class Staex {
 			build_valid_actions();
 		}
 
+		void perform_playout_action(std::mt19937_64* engine) {
+			// Prefer stack actions
+			if (valid_stack_actions.size() > 0) {
+				uniform_int_distribution<std::size_t> stack_dist(0, valid_stack_actions.size() - 1);
+				int random_stack_action = valid_stack_actions[stack_dist(*engine)];
+				perform_action(random_stack_action);
+				return;
+			}
+			uniform_int_distribution<std::size_t> move_dist(0, valid_move_actions.size() - 1);
+			int random_move_action = valid_move_actions[move_dist(*engine)];
+			perform_action(random_move_action);
+		}
+
 		void update_winner() {
 			int player1_score = 0;
 			int player2_score = 0;
@@ -135,5 +157,10 @@ class Staex {
 			} else {
 				winner = 0;
 			}
+		}
+
+		Staex clone() {
+			Staex staex_clone(state, pow_map, adjacents_map, moves_map);
+			return staex_clone;
 		}
 };
