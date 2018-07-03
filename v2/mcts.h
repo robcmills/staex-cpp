@@ -110,6 +110,7 @@ class MCTS {
 		void select();
 		void expand();
 		void playout();
+		void propagate();
 };
 
 MCTS::MCTS(
@@ -154,6 +155,18 @@ void MCTS::playout() {
 		playout.perform_playout_action(&random_engine);
 	}
 	current_winner = playout.winner;
+}
+
+void MCTS::propagate() {
+	while (current_node->parent != nullptr && should_continue()) {
+		current_node->visits++;
+		if (current_node->staex.state.active_player != current_winner) {
+			current_node->wins++;
+		}
+		current_node->update_ucb();
+		current_node = current_node->parent;
+	}
+	current_winner = 0;
 }
 
 }
