@@ -103,14 +103,17 @@ class MCTS {
 		Node* current_node;
 		int current_winner;
 		std::mt19937_64 random_engine;
+		std::uniform_int_distribution<int> distribution;
 
 		MCTS(int rounds, Staex staex);
 
 		bool should_continue() const;
+		bool get_random_bool();
 		void select();
 		void expand();
 		void playout();
 		void propagate();
+		int get_move();
 };
 
 MCTS::MCTS(
@@ -122,12 +125,16 @@ MCTS::MCTS(
 	root_node(*(new Node(0, nullptr, staex)))
 {
 	root_node.add_children();
-	std::mt19937_64 engine(std::time(0));
-	random_engine = engine;
+	random_engine = std::mt19937_64(std::time(0));
+	distribution = std::uniform_int_distribution<int>(0, 1);
 }
 
 bool MCTS::should_continue() const {
 	return rounds > 0;
+}
+
+bool MCTS::get_random_bool() {
+	return distribution(random_engine) > 0;
 }
 
 void MCTS::select() {
@@ -136,7 +143,10 @@ void MCTS::select() {
 		current_node = *std::max_element(
 			current_node->children.begin(),
 			current_node->children.end(),
-			[](Node* a, Node* b) {
+			[this](Node* a, Node* b) {
+				if (a->ucb == b->ucb) {
+					return this->get_random_bool();
+				}
 				return a->ucb < b->ucb;
 			}
 		);
@@ -167,6 +177,23 @@ void MCTS::propagate() {
 		current_node = current_node->parent;
 	}
 	current_winner = 0;
+}
+
+int MCTS::get_move() {
+	while (should_continue()) {
+		select();
+		expand();
+		if (current_winner == 0) { playout(); }
+		propagate();
+		rounds--;
+	}
+	return (*std::max_element(
+		root_node.children.begin(),
+		root_node.children.end(),
+		[](Node* a, Node* b) {
+			return a->visits < b->visits;
+		}
+	))->move;
 }
 
 }

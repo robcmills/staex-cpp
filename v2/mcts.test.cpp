@@ -43,7 +43,7 @@ void test_default_mcts(MCTS::MCTS* mcts) {
 
 void test_mcts_select(MCTS::MCTS* mcts) {
 	mcts->select();
-	assert_equal<int>(mcts->current_node->move, -3, "current_node selected");
+	assert_not_equal<int>(mcts->current_node->move, 0, "current_node selected");
 }
 
 void test_mcts_expand(MCTS::MCTS* mcts) {
@@ -66,6 +66,12 @@ void test_mcts_propagate(MCTS::MCTS* mcts) {
 	assert_equal<int>(updated_child->ucb, 0, "propagate updated a child");
 }
 
+void test_mcts_get_move(MCTS::MCTS* mcts) {
+	int move = 0;
+	move = mcts->get_move();
+	assert_not_equal(move, 0, "get_move");
+}
+
 int main() {
 	map<int,int> pow_map = build_pow_map(9);
 	map<int,int> adjacents_map = build_adjacents_map(9, 3, &pow_map);
@@ -83,7 +89,9 @@ int main() {
 	test_mcts_playout(&mcts);
 	test_mcts_propagate(&mcts);
 
-	cout << mcts.root_node.tree_to_string() << endl;
+	test_mcts_get_move(&mcts);
+
+	// cout << mcts.root_node.tree_to_string() << endl;
 
 	cout << "Tests complete." << endl;
 }
