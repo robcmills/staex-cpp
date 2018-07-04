@@ -32,7 +32,7 @@ int main() {
 	cout << "Move: " << move << endl;
 	cout << "Elapsed: " << t << endl;
 
-	cout << mcts.root_node.tree_to_string() << endl;
+	// cout << mcts.root_node.tree_to_string() << endl;
 
 	cout << "Tests complete." << endl;
 }

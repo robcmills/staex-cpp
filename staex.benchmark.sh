@@ -1,0 +1,1 @@
+g++ -std=c++11 staex.benchmark.cpp -o staex_benchmark && ./staex_benchmark
