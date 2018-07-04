@@ -1,0 +1,1 @@
+g++ -std=c++11 mcts.benchmark.cpp -o mcts_benchmark && ./mcts_benchmark
